@@ -23,10 +23,11 @@ export class MailService {
       return response;
     } catch (error) {
       console.log(error);
-      throw new ForbiddenException({
-        message: `Failed to send email to ${to}`,
-        error: error.message,
-      });
+      throw error;
+      // throw new ForbiddenException({
+      //   message: `Failed to send email to ${to}`,
+      //   error: error.message,
+      // });
     }
   }
 }
