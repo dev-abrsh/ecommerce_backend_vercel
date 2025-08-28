@@ -26,6 +26,7 @@ import { Roles } from 'src/gurads/roles.decorator';
 import { ApiBearerAuth, ApiBody, ApiConsumes } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { multerImageConfig } from 'src/config/multer.config';
+import { GetProductsDto } from './dto/get-product.dto';
 
 @Controller('products')
 export class ProductsController {
@@ -47,48 +48,17 @@ export class ProductsController {
     return this.productsService.createProduct(dto, url);
   }
 
-@Get()
-async getProducts(
-  @Query('keyword') keyword?: string,
-  @Query('name') name?: string,
-  @Query('description') description?: string,
-  @Query('minPrice') minPrice?: string,
-  @Query('maxPrice') maxPrice?: string,
-  @Query('rating') rating?: string,
-  @Query('category') category?: string,
-  @Query('brand') brand?: string,
-  @Query('ram') ram?: string,
-  @Query('storage') storage?: string,
-  @Query('screenSize') screenSize?: string,
-  @Query('battery') battery?: string,
-  @Query('color') color?: string,
-  @Query('modelNumber') modelNumber?: string,
-  @Query('page') page: string = '1',
-  @Query('limit') limit: string = '10',
-  @Query('sortBy') sortBy?: string,
-  @Query('sortOrder') sortOrder: 'asc' | 'desc' = 'asc',
-) {
-  return this.productsService.getProducts({
-    keyword,
-    name,
-    description,
-    minPrice: minPrice ? parseFloat(minPrice) : undefined,
-    maxPrice: maxPrice ? parseFloat(maxPrice) : undefined,
-    rating: rating ? parseFloat(rating) : undefined,
-    category,
-    brand,
-    ram,
-    storage,
-    screenSize,
-    battery,
-    color,
-    modelNumber,
-    page: parseInt(page, 10),
-    limit: parseInt(limit, 10),
-    sortBy,
-    sortOrder,
-  });
-}
+  @Get()
+  async getProducts(@Query() query: GetProductsDto) {
+    return this.productsService.getProducts({
+      ...query,
+      minPrice: query.minPrice ? Number(query.minPrice) : undefined,
+      maxPrice: query.maxPrice ? Number(query.maxPrice) : undefined,
+      rating: query.rating ? Number(query.rating) : undefined,
+      page: Number(query.page) || 1,
+      limit: Number(query.limit) || 10,
+    });
+  }
   @Get(':id')
   async getProductById(@Param('id') id: string) {
     return this.productsService.getProductById(id);
