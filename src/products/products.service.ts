@@ -58,6 +58,93 @@ export class ProductsService {
     if (!result) throw new NotFoundException('Product not found');
   }
 
+async getProducts(filters: {
+  keyword?: string;
+  name?: string;
+  description?: string;
+  minPrice?: number;
+  maxPrice?: number;
+  rating?: number;
+  category?: string;
+  brand?: string;
+  ram?: string;
+  storage?: string;
+  screenSize?: string;
+  battery?: string;
+  color?: string;
+  modelNumber?: string;
+  page?: number;
+  limit?: number;
+  sortBy?: string;
+  sortOrder?: 'asc' | 'desc';
+} = {}) {
+  const query: any = {};
+
+  // ✅ Keyword search
+  if (filters.keyword) {
+    query.$or = [
+      { name: { $regex: filters.keyword, $options: 'i' } },
+      { description: { $regex: filters.keyword, $options: 'i' } },
+      { modelNumber: { $regex: filters.keyword, $options: 'i' } },
+      { color: { $regex: filters.keyword, $options: 'i' } },
+    ];
+
+    // if numeric keyword -> check price
+    if (!isNaN(Number(filters.keyword))) {
+      query.$or.push({ price: Number(filters.keyword) });
+    }
+  }
+
+  // ✅ Field-specific filters
+  if (filters.name) query.name = { $regex: filters.name, $options: 'i' };
+  if (filters.description) query.description = { $regex: filters.description, $options: 'i' };
+  if (filters.category) query['category_id'] = filters.category; // use ObjectId not name
+  if (filters.brand) query['brand_id'] = filters.brand;         // use ObjectId not name
+  if (filters.ram) query.ram = filters.ram;
+  if (filters.storage) query.storage = filters.storage;
+  if (filters.screenSize) query.screenSize = filters.screenSize;
+  if (filters.battery) query.battery = filters.battery;
+  if (filters.color) query.color = filters.color;
+  if (filters.modelNumber) query.modelNumber = filters.modelNumber;
+  if (filters.rating) query.rating = { $gte: filters.rating };
+  if (filters.minPrice || filters.maxPrice) {
+    query.price = {};
+    if (filters.minPrice) query.price.$gte = filters.minPrice;
+    if (filters.maxPrice) query.price.$lte = filters.maxPrice;
+  }
+
+  // ✅ Pagination
+  const page = filters.page || 1;
+  const limit = filters.limit || 10;
+  const skip = (page - 1) * limit;
+
+  // ✅ Sorting
+  const sort: any = {};
+  if (filters.sortBy) {
+    sort[filters.sortBy] = filters.sortOrder === 'desc' ? -1 : 1;
+  }
+
+  // ✅ Query execution
+  const results = await this.productModel
+    .find(query)
+    .populate('brand_id', 'name')
+    .populate('category_id', 'name')
+    .skip(skip)
+    .limit(limit)
+    .sort(sort)
+    .exec();
+
+  const total = await this.productModel.countDocuments(query);
+
+  return {
+    data: results,
+    total,
+    page,
+    limit,
+    totalPages: Math.ceil(total / limit),
+  };
+}
+
 
 // ✅ New filter method
  async filterProducts(filters: {

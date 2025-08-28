@@ -47,25 +47,46 @@ export class ProductsController {
     return this.productsService.createProduct(dto, url);
   }
 
-  @Get()
-  async getAllProducts() {
-    return this.productsService.getAllProducts();
-  }
-
-
-
-@Get('filter')
-async filterProducts(
-  @Query('category') category?: string,
-  @Query('brand') brand?: string,
+@Get()
+async getProducts(
+  @Query('keyword') keyword?: string,
+  @Query('name') name?: string,
+  @Query('description') description?: string,
   @Query('minPrice') minPrice?: string,
   @Query('maxPrice') maxPrice?: string,
+  @Query('rating') rating?: string,
+  @Query('category') category?: string,
+  @Query('brand') brand?: string,
+  @Query('ram') ram?: string,
+  @Query('storage') storage?: string,
+  @Query('screenSize') screenSize?: string,
+  @Query('battery') battery?: string,
+  @Query('color') color?: string,
+  @Query('modelNumber') modelNumber?: string,
+  @Query('page') page: string = '1',
+  @Query('limit') limit: string = '10',
+  @Query('sortBy') sortBy?: string,
+  @Query('sortOrder') sortOrder: 'asc' | 'desc' = 'asc',
 ) {
-  return this.productsService.filterProducts({
-    category,
-    brand,
+  return this.productsService.getProducts({
+    keyword,
+    name,
+    description,
     minPrice: minPrice ? parseFloat(minPrice) : undefined,
     maxPrice: maxPrice ? parseFloat(maxPrice) : undefined,
+    rating: rating ? parseFloat(rating) : undefined,
+    category,
+    brand,
+    ram,
+    storage,
+    screenSize,
+    battery,
+    color,
+    modelNumber,
+    page: parseInt(page, 10),
+    limit: parseInt(limit, 10),
+    sortBy,
+    sortOrder,
   });
 }
   @Get(':id')
