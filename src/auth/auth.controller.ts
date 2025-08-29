@@ -4,7 +4,6 @@ import {
   ForbiddenException,
   Get,
   Post,
-  Query,
   Req,
   Res,
   UseGuards,
@@ -17,7 +16,7 @@ import {
   ResetPasswordDto,
   VerifyEmailDto,
 } from './dtos/login.dto';
-import { GoogleAuthGuard } from 'src/gurads/google-auth.guard';
+import { GoogleAuthGuard } from '../gurads/google-auth.guard';
 import { ConfigService } from '@nestjs/config';
 
 @Controller('auth')
