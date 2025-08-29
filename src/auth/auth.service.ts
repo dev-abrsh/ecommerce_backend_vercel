@@ -13,8 +13,8 @@ import { LoginDto } from './dtos/login.dto';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { MailService } from '../mail/mail.service';
-import { resetPasswordTemplate } from 'src/mail/templates/password-reset.template';
-import { emailVerificationTemplate } from 'src/mail/templates/email-confirmation.template';
+import { resetPasswordTemplate } from '../mail/templates/password-reset.template';
+import { emailVerificationTemplate } from '../mail/templates/email-confirmation.template';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
 
 @Injectable()
