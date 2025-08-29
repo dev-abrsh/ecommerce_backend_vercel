@@ -13,12 +13,14 @@ import { CloudinaryModule } from 'src/cloudinary/cloudinary.module';
   providers: [ProductsService],
   controllers: [ProductsController],
   imports: [
-  MongooseModule.forFeature([{ name: Product.name, schema: ProductSchema }]),
-  CategoryModule,
-  BrandModule,
-  CloudinaryModule
-],
-
-
+    MongooseModule.forFeature([
+      { name: Product.name, schema: ProductSchema },
+      { name: Category.name, schema: CategorySchema },
+      { name: Brand.name, schema: BrandSchema },
+    ]),
+    CategoryModule,
+    BrandModule,
+    CloudinaryModule,
+  ],
 })
 export class ProductsModule {}
