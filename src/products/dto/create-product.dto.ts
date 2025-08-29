@@ -4,9 +4,29 @@ import {
   IsString,
   IsNotEmpty,
   IsNumber,
-  IsMongoId,
   IsOptional,
+  IsEnum,
 } from 'class-validator';
+
+export enum CategoryEnum {
+  SMARTPHONES = 'Smartphones',
+  LAPTOPS = 'Laptops',
+  TABLETS = 'Tablets',
+  CAMERAS = 'Cameras',
+}
+
+export enum BrandEnum {
+  APPLE = 'Apple',
+  SAMSUNG = 'Samsung',
+  DELL = 'Dell',
+  HP = 'Hp',
+  TOSHIBA = 'Toshiba',
+  LENOVO = 'Lenvo',  
+  ASUS = 'Asus',
+  ACER = 'Acer',
+  SONY = 'Sony',  
+  CANON = 'Canon',
+}
 
 export class CreateProductDto {
   @IsString()
@@ -27,13 +47,15 @@ export class CreateProductDto {
   @IsOptional()
   rating?: number;
 
-  @IsMongoId()
+  @ApiProperty({ enum: CategoryEnum })
+  @IsEnum(CategoryEnum)
   @IsNotEmpty()
-  category_id: string;
+  category: CategoryEnum;
 
-  @IsMongoId()
+  @ApiProperty({ enum: BrandEnum })
+  @IsEnum(BrandEnum)
   @IsNotEmpty()
-  brand_id: string;
+  brand: BrandEnum;
 
   @Type(() => Number)
   @IsNumber()
