@@ -12,11 +12,10 @@ import * as bcrypt from 'bcrypt';
 import { LoginDto } from './dtos/login.dto';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import { MailService } from 'src/mail/mail.service';
+import { MailService } from '../mail/mail.service';
 import { resetPasswordTemplate } from 'src/mail/templates/password-reset.template';
 import { emailVerificationTemplate } from 'src/mail/templates/email-confirmation.template';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
-
 
 @Injectable()
 export class AuthService {
@@ -81,7 +80,7 @@ export class AuthService {
     }
   }
 
-   async ResendOTP(email: string) {
+  async ResendOTP(email: string) {
     const session = await this.connection.startSession();
     session.startTransaction();
     try {
@@ -91,7 +90,9 @@ export class AuthService {
         .findOne({ email })
         .session(session);
       if (!existingUser) {
-        throw new BadRequestException("Email doesn't exist please signup first");
+        throw new BadRequestException(
+          "Email doesn't exist please signup first",
+        );
       }
       if (existingUser.is_verified) {
         throw new BadRequestException('Email already verified');
@@ -103,12 +104,11 @@ export class AuthService {
         existingUser._id,
         {
           otp,
-          otpExpires:new Date(Date.now() + 5 * 60 * 1000), // 5 minutes from now
+          otpExpires: new Date(Date.now() + 5 * 60 * 1000), // 5 minutes from now
           is_verified: false,
         },
-        { session }
+        { session },
       );
-
 
       // You **can** optionally save the OTP in the DB or email it directly
       await this.sendVerificationEmail(otp, email);
@@ -123,7 +123,6 @@ export class AuthService {
       session.endSession();
 
       if (error instanceof BadRequestException) throw error;
-
 
       console.error('Signup Error:', error);
       throw new Error('An unexpected error occurred during sending OTP');
@@ -216,10 +215,10 @@ export class AuthService {
       if (!user) {
         throw new UnauthorizedException('Invalid token');
       }
-      if(user.otpExpires && new Date() > user.otpExpires) {
+      if (user.otpExpires && new Date() > user.otpExpires) {
         throw new UnauthorizedException('OTP has expired');
       }
-      await this.userModel.updateOne({ id: user.id },{ is_verified: true });
+      await this.userModel.updateOne({ id: user.id }, { is_verified: true });
       await this.userModel.updateOne({ _id: user._id }, { is_verified: true });
 
       return { message: 'Email Verified successfully' };
@@ -267,17 +266,19 @@ export class AuthService {
       throw new NotFoundException('Invalid or expired token');
     }
   }
-  async validateGoogleUser(googleUser:{name:string,email:string,is_verified:boolean}){
+  async validateGoogleUser(googleUser: {
+    name: string;
+    email: string;
+    is_verified: boolean;
+  }) {
     const user = await this.userModel.findOne({ email: googleUser.email });
-    console.log("googleUser: ",googleUser);
-    if (user)return user;
-    return this.userModel.create(
-          {
-            name: googleUser.name,
-            email: googleUser.email,
-            password: ' ',
-            is_verified: googleUser.is_verified,
-          },
-      );
+    console.log('googleUser: ', googleUser);
+    if (user) return user;
+    return this.userModel.create({
+      name: googleUser.name,
+      email: googleUser.email,
+      password: ' ',
+      is_verified: googleUser.is_verified,
+    });
   }
 }
