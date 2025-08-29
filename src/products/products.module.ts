@@ -7,7 +7,7 @@ import { Category, CategorySchema } from '../category/category.model';
 import { Brand, BrandSchema } from '../brand/brand.model';
 import { CategoryModule } from '../category/category.module';
 import { BrandModule } from '../brand/brand.module';
-import { CloudinaryModule } from 'src/cloudinary/cloudinary.module';
+import { CloudinaryModule } from '../cloudinary/cloudinary.module';
 
 @Module({
   providers: [ProductsService],

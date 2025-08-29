@@ -1,8 +1,8 @@
 import { Controller, Param, Post, Res, Query, Get, Req } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Order } from 'src/order/order.model';
-import { OrderService } from 'src/order/order.service';
+import { Order } from '../order/order.model';
+import { OrderService } from '../order/order.service';
 
 @Controller('payment')
 export class PaymentController {

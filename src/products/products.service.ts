@@ -7,8 +7,8 @@ import { UpdateProductDto } from './dto/update-product.dto';
 import { v2 as cloudinary, UploadApiErrorResponse, UploadApiResponse } from 'cloudinary';
 import { Readable } from 'stream';
 import { Types } from 'mongoose';
-import { Category } from 'src/category/category.model';
-import { Brand } from 'src/brand/brand.model';
+import { Category } from '../category/category.model';
+import { Brand } from '../brand/brand.model';
 
 @Injectable()
 export class ProductsService {

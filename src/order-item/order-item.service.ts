@@ -3,7 +3,7 @@ import { CreateOrderItemDto } from './dto/create-order-item.dto';
 import { UpdateOrderItemDto } from './dto/update-order-item.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { OrderItem } from './order-item.model';
-import { Product } from 'src/products/products.model';
+import { Product } from '../products/products.model';
 import { Model, Types } from 'mongoose';
 
 @Injectable()

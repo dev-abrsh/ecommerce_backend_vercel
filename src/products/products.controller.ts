@@ -20,12 +20,12 @@ import {
   CreateProductWithImageDto,
 } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { AuthGuard } from 'src/gurads/auth.guard';
-import { RolesGuard } from 'src/gurads/roles.gurad';
-import { Roles } from 'src/gurads/roles.decorator';
+import { AuthGuard } from '../gurads/auth.guard';
+import { RolesGuard } from '../gurads/roles.gurad';
+import { Roles } from '../gurads/roles.decorator';
 import { ApiBearerAuth, ApiBody, ApiConsumes } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { multerImageConfig } from 'src/config/multer.config';
+import { multerImageConfig } from '../config/multer.config';
 import { GetProductsDto } from './dto/get-product.dto';
 
 @Controller('products')

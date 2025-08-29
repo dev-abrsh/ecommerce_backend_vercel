@@ -6,7 +6,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { SignupDto } from './dtos/signup.dto';
-import { User, UserRole } from 'src/user/user.model';
+import { User, UserRole } from '../user/user.model';
 import { Connection, Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import { LoginDto } from './dtos/login.dto';
